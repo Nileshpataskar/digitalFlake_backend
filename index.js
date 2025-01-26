@@ -9,7 +9,6 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-// Middleware for parsing JSON
 app.use(bodyParser.json());
 
 // Routes
@@ -18,7 +17,7 @@ app.use("/user", userRoutes); // User routes (profile)
 
 // Root route
 app.get("/", (req, res) => {
-  res.send("Welcome to the Express Backend!");
+  res.send("Welcome to the Express Backend s!");
 });
 
 // Start the server

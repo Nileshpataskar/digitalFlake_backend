@@ -2,7 +2,7 @@ const Category = require("../models/Category");
 
 const getCategories = async (req, res) => {
   try {
-    const categories = await Category.find({ userId: req.user.id });
+    const categories = await Category.find({ userId: req.user });
     res.status(200).json({ success: true, data: categories });
   } catch (error) {
     console.error(error);
@@ -12,7 +12,8 @@ const getCategories = async (req, res) => {
 
 const addCategories = async (req, res) => {
   try {
-    const { name, description, image } = req.body;
+    const { name, description } = req.body;
+    const image = req.file ? req.file.path : null;
 
     if (!name) {
       return res
@@ -36,13 +37,15 @@ const addCategories = async (req, res) => {
 const updateCategory = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, image, status } = req.body;
+    const { name, description, status } = req.body;
+    const image = req.file ? req.file.path : undefined;
 
-    const updatedCategory = await Category.findByIdAndUpdate(
-      id,
-      { name, description, image, status },
-      { new: true }
-    );
+    const updateData = { name, description, status };
+    if (image) updateData.image = image;
+
+    const updatedCategory = await Category.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
 
     if (!updatedCategory) {
       return res

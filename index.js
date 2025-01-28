@@ -23,6 +23,7 @@ const {
   deleteProduct,
 } = require("./controller/productController");
 const { verifyToken } = require("./middleware/auth");
+const upload = require("./middleware/upload");
 
 const app = express();
 
@@ -43,10 +44,13 @@ app.use(bodyParser.json());
 app.use("/auth", authRoutes); // Auth routes (login, register)
 app.use("/user", userRoutes); // User routes (profile)
 
+app.use("/uploads", express.static("uploads"));
+
+
 // Category routes (protected)
 app.get("/category", verifyToken, getCategories);
-app.post("/category", verifyToken, addCategories);
-app.patch("/category/:id", verifyToken, updateCategory);
+app.post("/category", verifyToken, upload.single("image"), addCategories);
+app.patch("/category/:id", verifyToken, upload.single("image"), updateCategory);
 app.delete("/category/:id", verifyToken, deleteCategory);
 
 // Subcategory routes (protected)

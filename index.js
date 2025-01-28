@@ -4,13 +4,32 @@ const connectDB = require("./db"); // MongoDB connection
 const authRoutes = require("./routes/auth"); // Authentication routes
 const userRoutes = require("./routes/user"); // User profile routes
 const cors = require("cors");
+const {
+  getCategories,
+  addCategories,
+  updateCategory,
+  deleteCategory,
+} = require("./controller/categoryController");
+const {
+  getSubCategory,
+  addSubCategory,
+  updateSubCategory,
+  deleteSubCategory,
+} = require("./controller/subCategoryController");
+const {
+  getProducts,
+  addProduct,
+  updateProduct,
+  deleteProduct,
+} = require("./controller/productController");
+const { verifyToken } = require("./middleware/auth");
 
 const app = express();
 
 const corsOptions = {
   origin: "*", // Allow all origins
-  methods: "*", // Allow only GET and POST methods (adjust if needed)
-  allowedHeaders: "Content-Type,Authorization", // Allow specific headers
+  methods: "*",
+  allowedHeaders: "Content-Type,Authorization",
 };
 
 app.use(cors(corsOptions));
@@ -24,9 +43,27 @@ app.use(bodyParser.json());
 app.use("/auth", authRoutes); // Auth routes (login, register)
 app.use("/user", userRoutes); // User routes (profile)
 
+// Category routes (protected)
+app.get("/category", verifyToken, getCategories);
+app.post("/category", verifyToken, addCategories);
+app.patch("/category/:id", verifyToken, updateCategory);
+app.delete("/category/:id", verifyToken, deleteCategory);
+
+// Subcategory routes (protected)
+app.get("/subcategory", verifyToken, getSubCategory);
+app.post("/subcategory", verifyToken, addSubCategory);
+app.patch("/subcategory/:id", verifyToken, updateSubCategory);
+app.delete("/subcategory/:id", verifyToken, deleteSubCategory);
+
+// Product routes (protected)
+app.get("/product", verifyToken, getProducts);
+app.post("/product", verifyToken, addProduct);
+app.patch("/product/:id", verifyToken, updateProduct);
+app.delete("/product/:id", verifyToken, deleteProduct);
+
 // Root route
 app.get("/", (req, res) => {
-  res.send("Welcome to the Express Backend s!");
+  res.send("Welcome to the Express Backend!");
 });
 
 // Start the server

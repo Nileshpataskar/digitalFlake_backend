@@ -9,6 +9,7 @@ const {
   addCategories,
   updateCategory,
   deleteCategory,
+  getCategoryById,
 } = require("./controller/categoryController");
 const {
   getSubCategory,
@@ -46,9 +47,10 @@ app.use("/user", userRoutes); // User routes (profile)
 
 app.use("/uploads", express.static("uploads"));
 
-
 // Category routes (protected)
 app.get("/category", verifyToken, getCategories);
+app.get("/category/:id", verifyToken, getCategoryById);
+
 app.post("/category", verifyToken, upload.single("image"), addCategories);
 app.patch("/category/:id", verifyToken, upload.single("image"), updateCategory);
 app.delete("/category/:id", verifyToken, deleteCategory);

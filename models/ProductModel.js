@@ -9,14 +9,10 @@ const productSchema = mongoose.Schema({
     required: true, // Correct usage
   },
   category: {
-    name: {
-      type: String,
-    },
+    type: String,
   },
   subCategory: {
-    name: {
-      type: String,
-    },
+    type: String,
   },
   image: {
     type: String,

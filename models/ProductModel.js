@@ -11,13 +11,11 @@ const productSchema = mongoose.Schema({
   category: {
     name: {
       type: String,
-      required: true, // Corrected this line
     },
   },
   subCategory: {
     name: {
       type: String,
-      required: true, // Corrected this line
     },
   },
   image: {
@@ -31,7 +29,6 @@ const productSchema = mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", // Assuming User is the name of your User model
-    required: true,
   },
 });
 

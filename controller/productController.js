@@ -2,7 +2,18 @@ const ProductModel = require("../models/ProductModel");
 
 const getProducts = async (req, res) => {
   try {
-    const products = await ProductModel.find({userId:req.user});
+    const products = await ProductModel.find({ userId: req.user });
+    res.status(200).json({ success: true, data: products });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+const getProductsById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const products = await ProductModel.findById(id);
+
     res.status(200).json({ success: true, data: products });
   } catch (error) {
     console.error(error);
@@ -12,7 +23,10 @@ const getProducts = async (req, res) => {
 
 const addProduct = async (req, res) => {
   try {
-    const { name, category, subCategory, image, status } = req.body;
+    const { name, category, subCategory, status } = req.body;
+
+    const image = req.file ? req.file.path : null;
+
     const newProduct = new ProductModel({
       name,
       category,
@@ -35,12 +49,16 @@ const addProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, category, subCategory, image, status } = req.body;
+    const { name, category, subCategory, status } = req.body;
 
+    const updateData = { name, category, subCategory, status };
+    if (image) updateData.image = image;
+
+    const image = req.file ? req.file.path : undefined;
     // Find subcategory and update
     const updatedProduct = await ProductModel.findByIdAndUpdate(
       id,
-      { name, category, subCategory, image, status },
+      updateData,
       { new: true } // Return the updated document
     );
 
@@ -80,4 +98,10 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-module.exports = { getProducts, addProduct, updateProduct, deleteProduct };
+module.exports = {
+  getProducts,
+  getProductsById,
+  addProduct,
+  updateProduct,
+  deleteProduct,
+};

@@ -24,7 +24,6 @@ const subCategorySchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", // Assuming User is the name of your User model
-    required: true,
   },
 });
 

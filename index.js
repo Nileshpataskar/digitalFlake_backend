@@ -16,12 +16,14 @@ const {
   addSubCategory,
   updateSubCategory,
   deleteSubCategory,
+  getSubcategoryById,
 } = require("./controller/subCategoryController");
 const {
   getProducts,
   addProduct,
   updateProduct,
   deleteProduct,
+  getProductsById,
 } = require("./controller/productController");
 const { verifyToken } = require("./middleware/auth");
 const upload = require("./middleware/upload");
@@ -57,14 +59,21 @@ app.delete("/category/:id", verifyToken, deleteCategory);
 
 // Subcategory routes (protected)
 app.get("/subcategory", verifyToken, getSubCategory);
-app.post("/subcategory", verifyToken, addSubCategory);
-app.patch("/subcategory/:id", verifyToken, updateSubCategory);
+app.get("/subcategory/:id", verifyToken, getSubcategoryById);
+app.post("/subcategory", verifyToken, upload.single("image"), addSubCategory);
+app.patch(
+  "/subcategory/:id",
+  verifyToken,
+  upload.single("image"),
+  updateSubCategory
+);
 app.delete("/subcategory/:id", verifyToken, deleteSubCategory);
 
 // Product routes (protected)
 app.get("/product", verifyToken, getProducts);
-app.post("/product", verifyToken, addProduct);
-app.patch("/product/:id", verifyToken, updateProduct);
+app.get("/product/:id", verifyToken, getProductsById);
+app.post("/product", verifyToken, upload.single("image"), addProduct);
+app.patch("/product/:id", verifyToken, upload.single("image"), updateProduct);
 app.delete("/product/:id", verifyToken, deleteProduct);
 
 // Root route
